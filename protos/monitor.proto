@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package xmon;
+
+option go_package = "github.com/anukul/xmon/backend/proto";
+
+message ListNodesRequest {}
+
+message ListNodesResponse {
+  message Client {
+    enum Status {
+      HEALTHY = 0;
+      UNHEALTHY = 1;
+    }
+    string version = 2;
+    Status status = 3;
+    google.protobuf.Timestamp lastPing = 4;
+  }
+
+  message Node {
+    string name = 1;
+    Client executionClient = 2;
+    Client consensusClient = 3;
+  }
+
+  repeated Node nodes = 1;
+}
+
+message ListBlocksRequest {}
+
+message ListBlocksResponse {
+  message BlockData {
+    int64 blockNumber = 1;
+    map<string, string> hashes = 2;
+    bool isSynced = 3;
+  }
+  repeated BlockData blocks = 1;
+}
+
+message ListSlotsRequest {}
+
+message ListSlotsResponse {
+  message Slot {
+    int64 number = 1;
+    string hash = 2;
+  }
+
+  message SlotList {
+    repeated Slot slots = 1;
+  }
+
+  // node -> []slot
+  map<string, SlotList> slots = 1;
+}
+
+service Monitor {
+  rpc ListNodes(ListNodesRequest) returns (ListNodesResponse) {}
+  rpc ListBlocks(ListBlocksRequest) returns (ListBlocksResponse) {}
+  rpc ListSlots(ListSlotsRequest) returns (ListSlotsResponse) {}
+}

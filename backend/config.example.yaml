@@ -1,0 +1,24 @@
+server_address: 0.0.0.0:8000
+database_path: ./scratch/database
+refresh_interval: 5
+chain_name: Mainnet
+
+nodes:
+  - name: geth-prysm
+    kind: rpc
+    el_rpc_url: https://geth.mainnet.ethpandaops.io/
+    cl_rpc_url: https://prysm.mainnet.ethpandaops.io/
+    auth_headers:
+      CF-Access-Client-Id:
+      CF-Access-Client-Secret:
+
+testing: false
+
+test_nodes:
+  geth:
+    999: 0xabc
+    998: 0xdef
+    997: 0xghi
+  erigon:
+    998: 0xdef
+    997: 0xghi
